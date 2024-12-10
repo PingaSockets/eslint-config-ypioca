@@ -1,21 +1,38 @@
-// eslint.config.js
+// eslint.config.js - CommonJS
 const tseslint = require('@typescript-eslint/eslint-plugin');
 const parser = require('@typescript-eslint/parser');
 const eslintStylePlugin = require('@stylistic/eslint-plugin');
 const simpleImportSort = require('eslint-plugin-simple-import-sort');
+const depend = require('eslint-plugin-depend'); // suggest alternatives to various dependencies
+const sonarjs = require('eslint-plugin-sonarjs'); // JS/TS rules from SonarJS
+const eslintPluginUnicorn = require('eslint-plugin-unicorn'); // More than 100 powerful ESLint rules
+const jsdoc = require('eslint-plugin-jsdoc');
+const pluginPromise = require('eslint-plugin-promise'); // Enforce best practices for JavaScript promises
+const regexp = require("eslint-plugin-regexp");
+
+//const globals = require('globals');
 
 module.exports = [
+  depend.configs['flat/recommended'],
+  sonarjs.configs.recommended,
+  eslintPluginUnicorn.configs['flat/recommended'], // Create the plugin here. No need to add below.
+  jsdoc.configs['flat/recommended'],
+  pluginPromise.configs['flat/recommended'], // Create the plugin here. No need to add below.
+  regexp.configs["flat/recommended"],
   {
     files: ['**/*.js', '**/*.ts'],
     plugins: {
       '@typescript-eslint': tseslint,
       '@eslint-stylistic': eslintStylePlugin,
-	  'simple-import-sort': simpleImportSort
+  	  'simple-import-sort': simpleImportSort,
+      jsdoc,
+      //regexp
     },
     languageOptions: {
       parser: parser,
       sourceType: 'module',
       ecmaVersion: 'latest',
+      //globals: globals.builtin,
       parserOptions: {
         project: true,
         //tsconfigRootDir: process.cwd()
@@ -73,7 +90,24 @@ module.exports = [
         ],
         "@typescript-eslint/no-unused-vars": ["error"],
         "@typescript-eslint/explicit-function-return-type": "off", // error
-  
+        "@typescript-eslint/no-deprecated": "error",
+
+        // SonarJS Rules
+        "sonarjs/cognitive-complexity": "warn",
+        "sonarjs/todo-tag": "warn",
+
+        // Unicorn Rules
+        "unicorn/better-regex": "warn",
+
+        // JSDoc Rules
+        'jsdoc/require-description': 'warn',
+
+        // Promise Rules
+        "promise/always-return": "error",
+
+        // RegExp Rules
+        "regexp/no-useless-assertions": "error",
+
         // Estilos de código
         "camelcase": [
           "error",
@@ -123,7 +157,7 @@ module.exports = [
         "comma-spacing": "error",
         "jsx-quotes": ["error", "prefer-single"],
   
-        // Plugin de ordenação de imports
+        // Simple Import Rules
         "simple-import-sort/imports": [
           "error",
           {
